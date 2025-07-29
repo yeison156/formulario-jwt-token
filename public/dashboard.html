@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/token.css">
+</head>
+<body>
+  <div class="dashboard-container">
+    <div class="header">
+      <h2>Bienvenido al Dashboard</h2>
+      <button class="logout-btn" id="logoutBtn">Cerrar sesión</button>
+    </div>
+    <div class="user-info" id="userInfo">
+      <!-- Aquí se mostrará la información del usuario -->
+    </div>
+    <div class="token-box">
+      <h2>Tu Token JWT</h2>
+      <pre id="tokenValue"></pre>
+      <button class="btn-copiar" onclick="copiarToken()">Copiar token</button>
+    </div>
+  </div>
+  <script>
+    // Obtener usuario y token del localStorage
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+    const token = localStorage.getItem('token');
+
+    // Validar token antes de mostrar el dashboard
+    if (!token) {
+        alert("Acceso no autorizado. Debes iniciar sesión primero.");
+        window.location.href = "/login.html";
+    }
+
+    // Mostrar información del usuario
+    const userInfoDiv = document.getElementById('userInfo');
+    const oauthProvider = localStorage.getItem('oauthProvider');
+    
+    if (usuario) {
+      let providerInfo = '';
+      if (oauthProvider) {
+        const providerNames = {
+          facebook: 'Facebook',
+          google: 'Google',
+          twitter: 'Twitter'
+        };
+        providerInfo = `<br><strong>Proveedor:</strong> ${providerNames[oauthProvider] || oauthProvider}`;
+      }
+      
+      userInfoDiv.innerHTML = `
+        <strong>Nombre:</strong> ${usuario.nombre || usuario.correo || usuario.email}<br>
+        <strong>Email:</strong> ${usuario.email || usuario.correo}<br>
+        <strong>Rol:</strong> ${usuario.rol || 'user'}${providerInfo}
+      `;
+    } else {
+      userInfoDiv.innerHTML = '<span style="color:red;">No hay información de usuario. Por favor inicia sesión.</span>';
+    }
+
+    // Mostrar token
+    document.getElementById('tokenValue').textContent = token || 'No hay token disponible';
+
+    // Copiar token al portapapeles
+    function copiarToken() {
+      if (token) {
+        navigator.clipboard.writeText(token);
+        alert('Token copiado al portapapeles');
+      }
+    }
+
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('usuario');
+      localStorage.removeItem('rememberMe');
+      window.location.href = '/login.html';
+    });
+  </script>
+</body>
+</html>
