@@ -1,5 +1,7 @@
 # Sistema de Login con JWT
 
+![Sistema de Login JWT](public/assets/img/formulario-jwt-preview.png)
+
 Un sistema completo de autenticación con JWT (JSON Web Tokens) que incluye login, registro y verificación de tokens.
 
 ## 🚀 Características
